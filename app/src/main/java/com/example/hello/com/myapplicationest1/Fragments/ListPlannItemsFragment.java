@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter;
 
 public class ListPlannItemsFragment extends ListFragment
 {
-    String data[] = new String[] { "one", "two", "three", "four" };
+    String data[] = new String[] { "one", "two", "three", "four" }; // this is test array
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
