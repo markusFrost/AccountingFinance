@@ -15,7 +15,7 @@
             android:text="New Text"
             android:layout_marginLeft="15dp"
             android:gravity="center_vertical"
-            android:id="@+id/textView"
+            android:id="@+id/plannTvName"
             android:layout_gravity="center_vertical"
             android:layout_weight="1" />
 
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:id="@+id/checkBox"
+            android:id="@+id/plannCheckBox"
             android:layout_marginRight="15dp" />
     </LinearLayout>
 

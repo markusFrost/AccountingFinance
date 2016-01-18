@@ -2,15 +2,12 @@ package com.example.hello.com.myapplicationest1;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.hello.com.myapplicationest1.activities.HeaderActivity;
+import com.example.hello.com.myapplicationest1.Activities.HeaderActivity;
 
 public class MainActivity extends AppCompatActivity {
 
