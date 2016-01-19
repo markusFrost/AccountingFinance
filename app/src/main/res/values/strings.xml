@@ -6,11 +6,16 @@
     <string name="add_new_product">Добавление нового продукта</string>
     <string name="add">Добавить</string>
     <string name="cancel">Отмена</string>
+    <string name="hint_input_product_name">Наименование продукта</string>
+    <string name="hint_price_per_kg">Цена за 1 кг</string>
+    <string name="hint_price_per_item">Цена за 1 шт</string>
+    <string name="hint_total_amount">Вес товара</string>
+    <string name="result">Результат:</string>
 
 
     <string-array name="planets_array">
         <item>Покупки</item>
     </string-array>
 
-    <!--<string name=""></string>-->
+    <!--     <string name=""></string>      -->
 </resources>

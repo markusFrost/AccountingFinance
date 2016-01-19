@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.hello.com.myapplicationest1.Activities.ProductDetailActivity;
 import com.example.hello.com.myapplicationest1.Adapters.PlannItemsAdapter;
 import com.example.hello.com.myapplicationest1.Objects.Constants;
 import com.example.hello.com.myapplicationest1.Objects.Extras;
@@ -86,7 +87,9 @@ public class ListPlannItemsFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-               // Toast.makeText(getActivity(),"12233" + "", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+                startActivityForResult(intent, Constants.CODE_DETAIL_ACTIVITY);
             }
         });
 
