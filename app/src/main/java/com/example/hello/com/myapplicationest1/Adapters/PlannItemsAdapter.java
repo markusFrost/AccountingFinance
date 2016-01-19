@@ -24,6 +24,16 @@ public class PlannItemsAdapter extends BaseAdapter
         this.list = list;
     }
 
+    public void Add(String name)
+    {
+        list.add(0,name);
+    }
+
+    public void Remove(int position)
+    {
+        list.remove(position);
+    }
+
     @Override
     public int getCount()
     {
