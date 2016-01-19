@@ -16,18 +16,13 @@
             android:text="New Text"
             android:layout_marginLeft="15dp"
             android:gravity="center_vertical"
-            android:id="@+id/plannTvName"
-            android:textSize="20dp"
-            android:padding="5dp"
+            android:id="@+id/purchareTvName"
             android:layout_gravity="center_vertical"
+            android:padding="15dp"
+            android:textSize="25dp"
             android:layout_weight="1" />
 
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:id="@+id/plannCheckBox"
-            android:layout_marginRight="15dp" />
+
     </LinearLayout>
 
 </LinearLayout>

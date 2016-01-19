@@ -1,11 +1,9 @@
 package com.example.hello.com.myapplicationest1;
 
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.hello.com.myapplicationest1.Activities.HeaderActivity;
-import com.example.hello.com.myapplicationest1.Fragments.ListPlannItemsFragment;
+import com.example.hello.com.myapplicationest1.Fragments.ListPurchasesFragment;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -37,10 +34,12 @@ public class MainActivity extends AppCompatActivity
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
+        selectItem(0);
+
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = new Intent(MainActivity.this, HeaderActivity.class);
+        Intent intent = new Intent(MainActivity.this, PlannItemsActivity.class);
         startActivity(intent);*/
     }
 
@@ -55,7 +54,7 @@ public class MainActivity extends AppCompatActivity
 
     private void selectItem(int position)
     {
-        ListPlannItemsFragment fragment = new ListPlannItemsFragment();
+        ListPurchasesFragment fragment = new ListPurchasesFragment();
         Bundle args = new Bundle();
         //args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
         fragment.setArguments(args);

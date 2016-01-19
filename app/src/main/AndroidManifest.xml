@@ -18,7 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.HeaderActivity" >
+        <activity android:name=".Activities.PlannItemsActivity" >
+        </activity>
+        <activity android:name=".Activities.ProductDetailActivity" >
         </activity>
     </application>
 
