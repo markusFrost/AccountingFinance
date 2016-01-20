@@ -22,60 +22,47 @@
             android:layout_height="wrap_content"
             android:id="@+id/spnProductPersonType"
             android:gravity="center"
+            android:background="@android:color/holo_blue_bright"
+            android:layout_margin="10dp"
+            android:padding="20dp"
+            android:entries="@array/person_type_array"
             android:layout_gravity="center_horizontal" />
 
-        <Spinner
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spnProductType"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editPricePerKg"
-            android:inputType="numberDecimal"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:hint="@string/hint_price_per_kg"
-            />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editProductCount"
+                android:inputType="numberDecimal"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:hint="@string/hint_count_items"
+                android:layout_weight="1" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editTotalAmount"
-            android:inputType="numberDecimal"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:hint="@string/hint_total_amount"
-            />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editPricePerUnit"
+                android:inputType="numberDecimal"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:hint="@string/hint_result"
+                android:layout_weight="1" />
 
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editPricePerItem"
-            android:inputType="numberDecimal"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:hint="@string/hint_price_per_item"
-            />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spnProductCount"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/result"
-            android:id="@+id/tvResult"
+            android:id="@+id/tvProductResult"
             android:textSize="20dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -87,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@android:string/ok"
-                android:id="@+id/btnProductDetailOk"
+                android:id="@+id/btnProductOk"
                 android:layout_weight="1"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="5dp" />
@@ -95,8 +82,8 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@android:string/cancel"
-                android:id="@+id/btnProductDetailCancel"
+                android:text="@string/clear"
+                android:id="@+id/btnProductClear"
                 android:layout_weight="1"
                 android:layout_marginRight="10dp"
                 android:layout_marginLeft="5dp" />

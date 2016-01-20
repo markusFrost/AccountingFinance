@@ -7,14 +7,24 @@
     <string name="add">Добавить</string>
     <string name="cancel">Отмена</string>
     <string name="hint_input_product_name">Наименование продукта</string>
-    <string name="hint_price_per_kg">Цена за 1 кг</string>
+    <string name="hint_count_items">Количество</string>
     <string name="hint_price_per_item">Цена за 1 шт</string>
-    <string name="hint_total_amount">Вес товара</string>
+    <string name="hint_result">Цена за единицу</string>
     <string name="result">Результат:</string>
+    <string name="clear">Очистить</string>
+    <string name="rub">руб.</string>
+    <string name="current_product">Текущий продукт</string>
+    <string name="totalPrice">Итого:</string>
 
 
     <string-array name="planets_array">
         <item>Покупки</item>
+    </string-array>
+
+    <string-array name="person_type_array">
+        <item>Все</item>
+        <item>Андрей</item>
+        <item>Василий</item>
     </string-array>
 
     <!--     <string name=""></string>      -->

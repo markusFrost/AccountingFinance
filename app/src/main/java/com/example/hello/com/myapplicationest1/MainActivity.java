@@ -1,6 +1,7 @@
 package com.example.hello.com.myapplicationest1;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.hello.com.myapplicationest1.Activities.ProductDetailActivity;
 import com.example.hello.com.myapplicationest1.Fragments.ListPurchasesFragment;
+import com.example.hello.com.myapplicationest1.Objects.Constants;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -35,6 +38,9 @@ public class MainActivity extends AppCompatActivity
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         selectItem(0);
+
+        Intent intent = new Intent(this, ProductDetailActivity.class);
+        startActivityForResult(intent, Constants.CODE_DETAIL_ACTIVITY);
 
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
