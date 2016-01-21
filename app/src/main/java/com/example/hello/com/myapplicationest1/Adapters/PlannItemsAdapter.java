@@ -86,6 +86,5 @@ public class PlannItemsAdapter extends BaseAdapter
     {
         TextView tvName;
         CheckBox cb;
-
     }
 }

@@ -3,11 +3,12 @@
     <string name="action_settings">Settings</string>
     <string name="hello">Hello My Begginer!</string>
     <string name="input_product_name">Введите имя продукта</string>
+    <string name="input_product_count">Количество</string>
     <string name="add_new_product">Добавление нового продукта</string>
     <string name="add">Добавить</string>
     <string name="cancel">Отмена</string>
     <string name="hint_input_product_name">Наименование продукта</string>
-    <string name="hint_count_items">Количество</string>
+    <string name="count">Количество</string>
     <string name="hint_price_per_item">Цена за 1 шт</string>
     <string name="hint_result">Цена за единицу</string>
     <string name="result">Результат:</string>
@@ -15,10 +16,13 @@
     <string name="rub">руб.</string>
     <string name="current_product">Текущий продукт</string>
     <string name="totalPrice">Итого:</string>
+    <string name="name">Имя</string>
 
 
     <string-array name="planets_array">
         <item>Покупки</item>
+        <item>Запланированные покупки</item>
+        <item>Начать покупки</item>
     </string-array>
 
     <string-array name="person_type_array">

@@ -1,10 +1,12 @@
 package com.example.hello.com.myapplicationest1;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.hello.com.myapplicationest1.Activities.ProductDetailActivity;
+import com.example.hello.com.myapplicationest1.Fragments.ListPlannItemsFragment;
 import com.example.hello.com.myapplicationest1.Fragments.ListPurchasesFragment;
+import com.example.hello.com.myapplicationest1.Fragments.ProductDetailFragment;
 import com.example.hello.com.myapplicationest1.Objects.Constants;
 
 public class MainActivity extends AppCompatActivity
@@ -37,15 +41,17 @@ public class MainActivity extends AppCompatActivity
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        selectItem(0);
+        selectItem(1);
 
-        Intent intent = new Intent(this, ProductDetailActivity.class);
-        startActivityForResult(intent, Constants.CODE_DETAIL_ACTIVITY);
+       /* Intent intent = new Intent(this, ProductDetailActivity.class);
+        startActivityForResult(intent, Constants.CODE_DETAIL_ACTIVITY);*/
 
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = new Intent(MainActivity.this, PlannItemsActivity.class);
+        getSupportActionBar().setTitle("");
+
+        /*Intent intent = new Intent(MainActivity.this, PlannItemsActivity.class);
         startActivity(intent);*/
     }
 
@@ -60,7 +66,19 @@ public class MainActivity extends AppCompatActivity
 
     private void selectItem(int position)
     {
-        ListPurchasesFragment fragment = new ListPurchasesFragment();
+        Fragment fragment = null;
+        if ( position == 0)
+        {
+            fragment = new ListPurchasesFragment();
+        }
+        else if ( position == 1)
+        {
+            fragment = new ListPlannItemsFragment();
+        }
+        else if ( position == 2)
+        {
+            fragment = new ProductDetailFragment();
+        }
         Bundle args = new Bundle();
         //args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
         fragment.setArguments(args);
@@ -80,12 +98,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_plann, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

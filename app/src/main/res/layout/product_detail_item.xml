@@ -40,7 +40,7 @@
                 android:inputType="numberDecimal"
                 android:layout_margin="10dp"
                 android:gravity="center"
-                android:hint="@string/hint_count_items"
+                android:hint="@string/count"
                 android:layout_weight="1" />
 
             <EditText
