@@ -2,56 +2,54 @@ package com.example.hello.com.myapplicationest1.Fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.ListFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.hello.com.myapplicationest1.Adapters.ProductsAdapter;
+import com.example.hello.com.myapplicationest1.Adapters.PlannProductsAdapter;
+import com.example.hello.com.myapplicationest1.Adapters.PurchasesItemsAdapter;
+import com.example.hello.com.myapplicationest1.Databases.DonePurcharesDb;
+import com.example.hello.com.myapplicationest1.Databases.PlannPurchareDb;
+import com.example.hello.com.myapplicationest1.Databases.ProductDb;
+import com.example.hello.com.myapplicationest1.MainActivity;
+import com.example.hello.com.myapplicationest1.Models.PurchareItem;
 import com.example.hello.com.myapplicationest1.Models.Product;
-import com.example.hello.com.myapplicationest1.Objects.Constants;
+import com.example.hello.com.myapplicationest1.Objects.HelpUtils;
 import com.example.hello.com.myapplicationest1.R;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class ProductDetailFragment extends ListFragment
 {
-    EditText editName, editProductCount, editPricePerUnit;
+    EditText  editProductCount, editPricePerUnit;
+    AutoCompleteTextView editName;
     Spinner spn;
     TextView tvResult;
     Button btnOk, btnClear;
 
     double totalAmount = 0;
 
-    String[] data = {"one", "two", "three", "four", "five","one", "two", "three", "four", "five","one", "two", "three", "four", "five"};
+    List<PurchareItem> listPlannItems = null;
 
-    ProductsAdapter adapter;
+
+    PlannProductsAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,28 +85,30 @@ public class ProductDetailFragment extends ListFragment
 
         View header = getActivity().getLayoutInflater().inflate(R.layout.product_detail_item, null);
 
-        List<Product> productList = new ArrayList<>();
+        List<PurchareItem> productItemList = new ArrayList<>();
 
-        adapter = new ProductsAdapter(getActivity(), productList);
+        adapter = new PlannProductsAdapter(getActivity(), productItemList);
 
         setListAdapter(adapter);
         getListView().addHeaderView(header);
 
         fillView(header);
 
+        listPlannItems =  PlannPurchareDb.getPlannPurchares(getActivity());
+
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 position--;
 
-                Product item = adapter.getItem(position);
+               /* ProductItem item = adapter.getItem(position);
                 if (item.getIsDone() == Constants.DONE) {
                     item.setIsDone(Constants.PLAN);
                 } else {
                     item.setIsDone(Constants.DONE);
                 }
                 adapter.Update(position, item);
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();*/
 
             }
         });
@@ -118,7 +118,7 @@ public class ProductDetailFragment extends ListFragment
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 position--;
 
-                double price = adapter.getItem(position).getPriceTotal();
+                double price = adapter.getItem(position).TotalPrice;
                 totalAmount -= price;
 
                 tvResult.setText(getActivity().getResources().getString(R.string.result) + " " +
@@ -127,6 +127,8 @@ public class ProductDetailFragment extends ListFragment
                 adapter.Remove(position);
                 adapter.notifyDataSetChanged();
 
+                DonePurcharesDb.deletePurchareItem(adapter.getItem(position), getActivity());
+
                 return false;
             }
         });
@@ -134,18 +136,18 @@ public class ProductDetailFragment extends ListFragment
     }
 
 
-    /* public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    private void setSupportActionBarTitle(double price)
     {
-        View v = inflater.inflate(R.layout.product_detail_item, container, false);
-
-        fillView(v);
-
-
-        return v;
-    }*/
+        DecimalFormat df = new DecimalFormat("#.##");
+        MainActivity activity = (MainActivity) getActivity();
+        activity.getSupportActionBar().setTitle(activity.getResources().getString(R.string.totalPrice) + " " +
+                df.format(price) + " " + activity.getResources().getString(R.string.rub));
+    }
 
     private void calcProductAmount()
     {
+        DecimalFormat df = new DecimalFormat("#.##");
+
         String strCount = editProductCount.getText().toString();
         String strPricePerUnit = editPricePerUnit.getText().toString();
 
@@ -154,23 +156,25 @@ public class ProductDetailFragment extends ListFragment
             double count = Double.parseDouble(strCount);
             double pricePerUnit = Double.parseDouble(strPricePerUnit);
 
-            DecimalFormat df = new DecimalFormat("#.##");
+
             String resultValue = df.format(count * pricePerUnit) ;
 
-
+            setSupportActionBarTitle(totalAmount + count * pricePerUnit);
 
             tvResult.setText( getActivity().getResources().getString(R.string.result) +
                             " " + getActivity().getResources().getString(R.string.current_product) +
                     " " + resultValue + " " +
                     getActivity().getResources().getString(R.string.rub) +  "\n" +
                             getActivity().getResources().getString(R.string.totalPrice)  + " " +
-                    ( totalAmount + count * pricePerUnit ) +  getActivity().getResources().getString(R.string.rub)
+                    df.format( totalAmount + count * pricePerUnit ) +  getActivity().getResources().getString(R.string.rub)
             );
 
         }
         catch (Exception e){
-            tvResult.setText( getActivity().getResources().getString(R.string.result) + " " +
-                             totalAmount  +  getActivity().getResources().getString(R.string.rub)
+            setSupportActionBarTitle(totalAmount);
+
+            tvResult.setText(getActivity().getResources().getString(R.string.result) + " " +
+                            df.format(totalAmount) + getActivity().getResources().getString(R.string.rub)
             );
 
         }
@@ -211,7 +215,7 @@ public class ProductDetailFragment extends ListFragment
 
     private void fillView(View v)
     {
-        editName = (EditText) v.findViewById(R.id.editProductName);
+        editName = (AutoCompleteTextView) v.findViewById(R.id.editProductName);
         spn = (Spinner) v.findViewById(R.id.spnProductPersonType);
         editProductCount = (EditText) v.findViewById(R.id.editProductCount);
         editPricePerUnit = (EditText) v.findViewById(R.id.editPricePerUnit);
@@ -220,6 +224,18 @@ public class ProductDetailFragment extends ListFragment
         btnClear = (Button) v.findViewById(R.id.btnProductClear);
 
         setFocus(editName);
+
+       List<String> products_array = ProductDb.getProductsNames(getActivity());
+        ArrayAdapter<String> product_adapter =
+                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, products_array);
+        editName.setAdapter(product_adapter);
+
+        editName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                editProductCount.requestFocus();
+            }
+        });
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,8 +275,7 @@ public class ProductDetailFragment extends ListFragment
             }
 
             @Override
-            public void afterTextChanged(Editable s)
-            {
+            public void afterTextChanged(Editable s) {
                 calcProductAmount();
             }
         });
@@ -277,16 +292,50 @@ public class ProductDetailFragment extends ListFragment
             }
 
             @Override
-            public void afterTextChanged(Editable s)
-            {
+            public void afterTextChanged(Editable s) {
                 calcProductAmount();
             }
         });
     }
 
+    private long currentId = -1;
+
     private void createProduct(String name, int productPersonType, double pricePerUnit, double count)
     {
-        Product item = new Product();
+        Activity context = getActivity();
+
+        Product product = ProductDb.isProductExists(name, context);
+
+        if ( product == null)
+        {
+            product = new Product();
+            product.PricePerUnit = pricePerUnit;
+
+            product.Name = name;
+
+            product.Id = ProductDb.createProduct(product, context);
+        }
+        else
+        {
+
+            product.PricePerUnit = pricePerUnit;
+
+            ProductDb.updateProduct(product, context);
+        }
+
+
+        PurchareItem item = new PurchareItem();
+        item.DatePurchare = HelpUtils.getTimeMillsDay(System.currentTimeMillis());
+        item.Product = product;
+        item.Count = count;
+        item.Type = productPersonType;
+        item.TotalPrice = product.PricePerUnit * count;
+
+        item.Id = DonePurcharesDb.createPurchareItem(item,context);
+        adapter.Add(item);
+        adapter.notifyDataSetChanged();
+
+       /* PurchareItem item = new PurchareItem();
         item.setName(name);
         item.setPersonType(productPersonType);
         item.setPricePerUnit(pricePerUnit);
@@ -294,29 +343,41 @@ public class ProductDetailFragment extends ListFragment
         item.setProductCount(count);
         item.setIsDone(Constants.PLAN);
 
-        adapter.Add(item);
-        adapter.notifyDataSetChanged();
+        //adapter.Add(item);
+        adapter.notifyDataSetChanged();*/
     }
-     CharSequence[] listPlannItems = null;
+
     private void createListViewAlertDialog()
     {
-         listPlannItems = formCharSequenceFromProducts();
+        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Make your selection");
-        builder.setItems(listPlannItems, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int index) {
-                //Toast.makeText(getActivity(), item + "", Toast.LENGTH_SHORT).show();
-                //TODO: При клике на запланированную покупку элемент должен удаляться
-                editName.setText(getProductName(listPlannItems[index]) + "");
-                editProductCount.setText(getProductCountFromString(listPlannItems[index]) + "");
+        adb.setTitle(R.string.plann_purchare);
+        /*final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.select_dialog_singlechoice, listPlannItems);*/
+        final PlannProductsAdapter adapter = new PlannProductsAdapter(getActivity(), listPlannItems);
+
+        adb.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int index)
+            {
+                dialog.dismiss();
+
+                PurchareItem item = adapter.getItem(index);
+
+                editName.setText(item.Product.Name);
+                editProductCount.setText(item.Count +  "");
+
+                listPlannItems.remove(index);
+                adapter.notifyDataSetChanged();
+
+                PlannPurchareDb.deletePlannPurchare(item, getActivity());
+
                 editPricePerUnit.requestFocus();
                 showKeyboard(getActivity());
-
             }
         });
-        AlertDialog alert = builder.create();
-        alert.show();
+
+        adb.create().show();
     }
 
     private String getProductName(CharSequence text)
@@ -340,28 +401,5 @@ public class ProductDetailFragment extends ListFragment
         return  0;
     }
 
-    private CharSequence[] formCharSequenceFromProducts()
-    {
-        List<Product> listProducts = new ArrayList<>();
-        Product item;
 
-        for ( int i = 0; i <= 10; i++)
-        {
-            item = new Product();
-            item.setName("Name " + i);
-            item.setProductCount(i + 1);
-
-            listProducts.add(item);
-        }
-
-        List<String> listNames = new ArrayList<>();
-        for ( Product p : listProducts)
-        {
-            listNames.add( p.getName().substring(0,1).toUpperCase() +
-                    p.getName().substring(1).toLowerCase()
-                    + " ( " + p.getProductCount() + " )" );
-        }
-
-        return listNames.toArray(new CharSequence[listNames.size()]);
-    }
 }

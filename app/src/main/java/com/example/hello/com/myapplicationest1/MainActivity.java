@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.hello.com.myapplicationest1.Activities.ProductDetailActivity;
+import com.example.hello.com.myapplicationest1.Fragments.ListDayFragment;
 import com.example.hello.com.myapplicationest1.Fragments.ListPlannItemsFragment;
 import com.example.hello.com.myapplicationest1.Fragments.ListPurchasesFragment;
 import com.example.hello.com.myapplicationest1.Fragments.ProductDetailFragment;
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        selectItem(1);
+        selectItem(0);
 
        /* Intent intent = new Intent(this, ProductDetailActivity.class);
         startActivityForResult(intent, Constants.CODE_DETAIL_ACTIVITY);*/
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity
 
         getSupportActionBar().setTitle("");
 
-        /*Intent intent = new Intent(MainActivity.this, PlannItemsActivity.class);
+        /*Intent intent = new Intent(MainActivity.this, DoneItemsActivity.class);
         startActivity(intent);*/
     }
 
@@ -69,7 +70,8 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         if ( position == 0)
         {
-            fragment = new ListPurchasesFragment();
+            //fragment = new ListPurchasesFragment();
+            fragment = new ListDayFragment();
         }
         else if ( position == 1)
         {

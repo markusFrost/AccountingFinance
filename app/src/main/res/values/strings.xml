@@ -17,6 +17,7 @@
     <string name="current_product">Текущий продукт</string>
     <string name="totalPrice">Итого:</string>
     <string name="name">Имя</string>
+    <string name="plann_purchare">Запланированные покупки</string>
 
 
     <string-array name="planets_array">

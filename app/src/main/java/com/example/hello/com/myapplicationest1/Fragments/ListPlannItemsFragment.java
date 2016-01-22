@@ -4,44 +4,39 @@ package com.example.hello.com.myapplicationest1.Fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.text.Editable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.example.hello.com.myapplicationest1.Activities.ProductDetailActivity;
-import com.example.hello.com.myapplicationest1.Adapters.PlannItemsAdapter;
-import com.example.hello.com.myapplicationest1.Adapters.ProductsAdapter;
+import com.example.hello.com.myapplicationest1.Adapters.PlannProductsAdapter;
+import com.example.hello.com.myapplicationest1.Databases.PlannPurchareDb;
+import com.example.hello.com.myapplicationest1.Databases.ProductDb;
 import com.example.hello.com.myapplicationest1.MainActivity;
+import com.example.hello.com.myapplicationest1.Models.PurchareItem;
 import com.example.hello.com.myapplicationest1.Models.Product;
 import com.example.hello.com.myapplicationest1.Objects.Constants;
 import com.example.hello.com.myapplicationest1.Objects.Extras;
+import com.example.hello.com.myapplicationest1.Objects.HelpUtils;
 import com.example.hello.com.myapplicationest1.R;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class ListPlannItemsFragment extends Fragment
 {
 
-    ProductsAdapter adapter;
+    PlannProductsAdapter adapter;
 
     double totalPrice = 0;
     private double supportActionBarTitle;
@@ -61,27 +56,28 @@ public class ListPlannItemsFragment extends Fragment
             position = getArguments().getInt(Extras.PURCHARE_ID);
         }
 
-        setSupportActionBarTitle(totalPrice);
+        List<PurchareItem> list = PlannPurchareDb.getPlannPurchares(getActivity());
 
+        calcTotalAmount(list);
 
-
-        List<Product> list = new ArrayList<Product>();
-
-        adapter = new ProductsAdapter(getActivity(), list);
+        adapter = new PlannProductsAdapter(getActivity(), list);
 
         lv.setAdapter(adapter);
 
-        //createAddItemAlertDialog(getActivity());
 
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           int position, long arg3) {
-                Product product = adapter.getItem(position);
-                totalPrice -= product.getPriceTotal();
+                                           int position, long arg3)
+            {
+                PurchareItem productItem = adapter.getItem(position);
+                totalPrice -= productItem.TotalPrice;
                 adapter.Remove(position);
                 adapter.notifyDataSetChanged();
+
+                PlannPurchareDb.deletePlannPurchare(productItem, getActivity());
+
                 setSupportActionBarTitle(totalPrice);
                 return true;
             }
@@ -97,8 +93,7 @@ public class ListPlannItemsFragment extends Fragment
         FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
 
                 createAddItemAlertDialog(getActivity());
             }
@@ -107,7 +102,14 @@ public class ListPlannItemsFragment extends Fragment
         return v;
     }
 
-
+    private void calcTotalAmount(List<PurchareItem> list)
+    {
+        for ( PurchareItem item : list)
+        {
+            totalPrice += item.TotalPrice;
+        }
+        setSupportActionBarTitle(totalPrice);
+    }
 
 
     private void createAddItemAlertDialog(Activity context)
@@ -120,9 +122,19 @@ public class ListPlannItemsFragment extends Fragment
         LinearLayout layout = new LinearLayout(context);
         layout.setOrientation(LinearLayout.VERTICAL);
 
-        final EditText editName = new EditText(context);
+        //http://developer.android.com/intl/ru/guide/topics/ui/controls/text.html
+
+        final AutoCompleteTextView editName = new AutoCompleteTextView(context);
         //editName.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         editName.setHint(R.string.name);
+        //-----------------------------------------------
+        List<String> products_array = ProductDb.getProductsNames(getActivity());
+        ArrayAdapter<String> product_adapter =
+                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, products_array);
+        editName.setAdapter(product_adapter);
+
+
+        //-----------------------------------------------
         layout.addView(editName);
 
         final EditText editCount = new EditText(context);
@@ -132,12 +144,20 @@ public class ListPlannItemsFragment extends Fragment
         editCount.setHint(R.string.count);
         layout.addView(editCount);
 
+        editName.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                editCount.requestFocus();
+            }
+        });
+
         alert.setView(layout);
 
 
         alert.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                createProduct(editName.getText().toString(), editCount.getText().toString());
+            public void onClick(DialogInterface dialog, int whichButton)
+            {
+                saveToDb(editName.getText().toString(), Constants.ALL, editCount.getText().toString());
             }
         });
 
@@ -150,32 +170,60 @@ public class ListPlannItemsFragment extends Fragment
         alert.show();
     }
 
-    private void createProduct(String name, String strCount)
+    private Product createProduct(String name)
+    {
+        Product item = null;
+
+        item = ProductDb.isProductExists(name, getActivity());
+
+        if ( item == null )
+        {
+            item = new Product();
+            item.Name = HelpUtils.formatName(name);
+            item.PricePerUnit = 0;
+
+            item.Id = ProductDb.createProduct(item, getActivity());
+        }
+
+        return item;
+    }
+
+    private PurchareItem createPlannPurchare(String strCount, Product product, int type)
     {
         try
         {
             double count = Double.parseDouble(strCount);
-            Product item = new Product();
-            item.setName(name);
-            item.setProductCount(count);
-            double productAmount = getPriceTotal(count);
-            item.setPriceTotal(productAmount);
+            PurchareItem item = new PurchareItem();
 
-            totalPrice += productAmount;
+            item.Count = count;
+            item.DatePurchare = HelpUtils.getTimeMillsDay(System.currentTimeMillis());
+            item.Product = product;
+            item.TotalPrice = item.Product.PricePerUnit * item.Count;
+            item.Type = type;
+            item.Id = PlannPurchareDb.createPlannPurchare(item, getActivity());
 
-            adapter.Add(item);
-            adapter.notifyDataSetChanged();
-            setSupportActionBarTitle(totalPrice);
+            return item;
+
         }catch (Exception e){}
-    }
 
-    private double getPriceTotal(double count)
+        return null;
+        }
+
+    private void saveToDb(String name, int type, String strCount)
     {
-        Random random = new Random();
-        double pricePerUnit =  random.nextDouble() * 100;
-        return count * pricePerUnit;
+        Product product = createProduct(name);
+
+        PurchareItem plannPurchare = createPlannPurchare(strCount, product, type);
+
+        totalPrice += plannPurchare.TotalPrice;
+
+        adapter.Add(plannPurchare);
+        adapter.notifyDataSetChanged();
+        setSupportActionBarTitle(totalPrice);
+
 
     }
+
 
     private void setSupportActionBarTitle(double price)
     {

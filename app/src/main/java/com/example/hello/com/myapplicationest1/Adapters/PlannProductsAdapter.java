@@ -3,7 +3,6 @@ package com.example.hello.com.myapplicationest1.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,30 +10,30 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.hello.com.myapplicationest1.Models.Product;
-import com.example.hello.com.myapplicationest1.Objects.Constants;
+import com.example.hello.com.myapplicationest1.Models.PurchareItem;
+import com.example.hello.com.myapplicationest1.Objects.HelpUtils;
 import com.example.hello.com.myapplicationest1.R;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class ProductsAdapter extends BaseAdapter
+public class PlannProductsAdapter extends BaseAdapter
 {
     Activity context;
-    List<Product> list;
+    List<PurchareItem> list;
 
-    public ProductsAdapter(Activity context, List<Product> list)
+    public PlannProductsAdapter(Activity context, List<PurchareItem> list)
     {
         this.context = context;
         this.list = list;
     }
 
-    public void Add(Product item)
+    public void Add(PurchareItem item)
     {
         list.add(0, item);
     }
 
-    public void Update ( int position, Product item)
+    public void Update ( int position, PurchareItem item)
     {
         list.set(position, item);
     }
@@ -51,7 +50,7 @@ public class ProductsAdapter extends BaseAdapter
     }
 
     @Override
-    public Product getItem(int position) {
+    public PurchareItem getItem(int position) {
         return list.get(position);
     }
 
@@ -89,15 +88,15 @@ public class ProductsAdapter extends BaseAdapter
 
         ViewHolder holder = (ViewHolder) convertView.getTag();
 
-        Product item =  getItem(position);
+        PurchareItem item =  getItem(position);
 
         DecimalFormat df = new DecimalFormat("#.##");
 
-        holder.tvName.setText(item.getName().substring(0,1).toUpperCase() + item.getName().substring(1).toLowerCase());
-        holder.tvProductCount.setText(df.format(item.getProductCount()));
-        holder.tvTotalPrice.setText(df.format(item.getPriceTotal()) + " " + context.getResources().getString(R.string.rub));
+        holder.tvName.setText(HelpUtils.formatName(item.Product.Name));
+        holder.tvProductCount.setText(df.format(item.Count));
+        holder.tvTotalPrice.setText(df.format(item.TotalPrice) + " " + context.getResources().getString(R.string.rub));
 
-        if ( item.getProductCount() == 0)
+        if ( item.Count == 0)
         {
             holder.tvProductCount.setVisibility(View.GONE);
         }
@@ -106,7 +105,7 @@ public class ProductsAdapter extends BaseAdapter
             holder.tvProductCount.setVisibility(View.VISIBLE);
         }
 
-        if ( item.getPriceTotal() == 0)
+        if ( item.TotalPrice == 0)
         {
             holder.tvTotalPrice.setVisibility(View.GONE);
         }
@@ -115,7 +114,7 @@ public class ProductsAdapter extends BaseAdapter
             holder.tvTotalPrice.setVisibility(View.VISIBLE);
         }
 
-        if (item.getIsDone() == Constants.DONE)
+      /*  if (item.getIsDone() == Constants.DONE)
         {
             holder.ll.setBackgroundColor(Color.BLUE);
             holder.tvName.setTextColor(Color.WHITE);
@@ -128,7 +127,7 @@ public class ProductsAdapter extends BaseAdapter
             holder.tvName.setTextColor(context.getResources().getColor(android.R.color.holo_purple));
             holder.tvTotalPrice.setTextColor(context.getResources().getColor(android.R.color.holo_blue_dark));
             holder.tvProductCount.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
-        }
+        }*/
 
         return convertView;
     }
